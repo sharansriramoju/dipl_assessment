@@ -2,6 +2,7 @@ import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../sequelize";
 
 interface ProductCategoryAttributes {
+  product_category_id: string;
   product_id: string;
   category_id: string;
   created_at?: Date;
@@ -10,13 +11,14 @@ interface ProductCategoryAttributes {
 
 interface ProductCategoryCreationAttributes extends Optional<
   ProductCategoryAttributes,
-  "created_at" | "updated_at"
+  "product_category_id" | "created_at" | "updated_at"
 > {}
 
 class ProductCategory
   extends Model<ProductCategoryAttributes, ProductCategoryCreationAttributes>
   implements ProductCategoryAttributes
 {
+  public product_category_id!: string;
   public product_id!: string;
   public category_id!: string;
   public created_at!: Date;
@@ -25,15 +27,19 @@ class ProductCategory
 
 ProductCategory.init(
   {
+    product_category_id: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      defaultValue: sequelize.literal("gen_random_uuid()"),
+      primaryKey: true,
+    },
     product_id: {
       type: DataTypes.STRING,
       allowNull: false,
-      primaryKey: true,
     },
     category_id: {
       type: DataTypes.UUID,
       allowNull: false,
-      primaryKey: true,
       references: {
         model: "categories",
         key: "category_id",

@@ -1,5 +1,11 @@
-import { Transaction } from "sequelize";
-import { Category, JobQueue, Product, ProductCategory } from "../models";
+import { Op, Transaction } from "sequelize";
+import {
+  Category,
+  JobQueue,
+  Product,
+  ProductCategory,
+  Review,
+} from "../models";
 
 export const addProductRepository = async (
   productData: {
@@ -92,6 +98,105 @@ export const addProductCategoryRepository = async (
 export const getLatestRunningJobQueueRepository = async (t?: Transaction) => {
   return await JobQueue.findOne({
     order: [["created_at", "DESC"]],
+    transaction: t,
+  });
+};
+
+export const getProductsRepository = async (
+  query: {
+    offset?: number;
+    limit?: number;
+    search?: string;
+    category_id?: string;
+    start_rating?: number;
+    end_rating?: number;
+    start_discounted_price?: number;
+    end_discounted_price?: number;
+    start_actual_price?: number;
+    end_actual_price?: number;
+    start_rating_count?: number;
+    end_rating_count?: number;
+  },
+  t?: Transaction,
+) => {
+  const whereClause: any = {};
+  if (query.search) {
+    whereClause.product_name = {
+      [Op.iLike]: `%${query.search}%`,
+    };
+  }
+  if (query.start_rating !== undefined || query.end_rating !== undefined) {
+    whereClause.rating = {};
+    if (query.start_rating !== undefined) {
+      whereClause.rating[Op.gte] = query.start_rating;
+    }
+    if (query.end_rating !== undefined) {
+      whereClause.rating[Op.lte] = query.end_rating;
+    }
+  }
+  if (
+    query.start_discounted_price !== undefined ||
+    query.end_discounted_price !== undefined
+  ) {
+    whereClause.discounted_price = {};
+    if (query.start_discounted_price !== undefined) {
+      whereClause.discounted_price[Op.gte] = query.start_discounted_price;
+    }
+    if (query.end_discounted_price !== undefined) {
+      whereClause.discounted_price[Op.lte] = query.end_discounted_price;
+    }
+  }
+  if (
+    query.start_actual_price !== undefined ||
+    query.end_actual_price !== undefined
+  ) {
+    whereClause.actual_price = {};
+    if (query.start_actual_price !== undefined) {
+      whereClause.actual_price[Op.gte] = query.start_actual_price;
+    }
+    if (query.end_actual_price !== undefined) {
+      whereClause.actual_price[Op.lte] = query.end_actual_price;
+    }
+  }
+  if (
+    query.start_rating_count !== undefined ||
+    query.end_rating_count !== undefined
+  ) {
+    whereClause.rating_count = {};
+    if (query.start_rating_count !== undefined) {
+      whereClause.rating_count[Op.gte] = query.start_rating_count;
+    }
+    if (query.end_rating_count !== undefined) {
+      whereClause.rating_count[Op.lte] = query.end_rating_count;
+    }
+  }
+
+  return await Product.findAndCountAll({
+    where: whereClause,
+    include: [
+      {
+        model: Review,
+        as: "reviews",
+        attributes: [
+          "review_id",
+          "review_title",
+          "review_content",
+          "user_name",
+        ],
+      },
+      {
+        model: Category,
+        as: "categories",
+        through: { attributes: ["product_id", "category_id"] },
+        where: query.category_id
+          ? {
+              category_id: query.category_id,
+            }
+          : undefined,
+      },
+    ],
+    offset: query.offset,
+    limit: query.limit,
     transaction: t,
   });
 };

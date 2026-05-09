@@ -9,12 +9,14 @@ import JobQueue from "./JobQueue";
 // Product-Category Many-to-Many Relationship
 Product.belongsToMany(Category, {
   through: ProductCategory,
+  as: "categories",
   foreignKey: "product_id",
   otherKey: "category_id",
   onDelete: "CASCADE",
 });
 Category.belongsToMany(Product, {
   through: ProductCategory,
+  as: "products",
   foreignKey: "category_id",
   otherKey: "product_id",
   onDelete: "CASCADE",

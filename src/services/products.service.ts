@@ -6,6 +6,7 @@ import {
   addProductCategoryRepository,
   addProductRepository,
   getLatestRunningJobQueueRepository,
+  getProductsRepository,
 } from "../database/repositories/products.repository";
 import sequelize from "../database/sequelize";
 import { addReviewRepository } from "../database/repositories/reviews.repository";
@@ -149,5 +150,57 @@ export const getLatestBulkUploadJobStatusService = async () => {
     } else {
       return dbJob;
     }
+  });
+};
+
+export const getAllProductsService = async (query: {
+  page?: string;
+  limit?: string;
+  search?: string;
+  category_id?: string;
+  start_rating?: string;
+  end_rating?: string;
+  start_discounted_price?: string;
+  end_discounted_price?: string;
+  start_actual_price?: string;
+  end_actual_price?: string;
+  start_rating_count?: string;
+  end_rating_count?: string;
+}) => {
+  return await sequelize.transaction(async (t) => {
+    const page = query.page ? parseInt(query.page) : 1;
+    const limit = query.limit ? parseInt(query.limit) : 10;
+    const offset = (page - 1) * limit;
+    return await getProductsRepository(
+      {
+        offset,
+        limit,
+        search: query.search,
+        category_id: query.category_id,
+        start_rating: query.start_rating
+          ? parseFloat(query.start_rating)
+          : undefined,
+        end_rating: query.end_rating ? parseFloat(query.end_rating) : undefined,
+        start_discounted_price: query.start_discounted_price
+          ? parseFloat(query.start_discounted_price)
+          : undefined,
+        end_discounted_price: query.end_discounted_price
+          ? parseFloat(query.end_discounted_price)
+          : undefined,
+        start_actual_price: query.start_actual_price
+          ? parseFloat(query.start_actual_price)
+          : undefined,
+        end_actual_price: query.end_actual_price
+          ? parseFloat(query.end_actual_price)
+          : undefined,
+        start_rating_count: query.start_rating_count
+          ? parseFloat(query.start_rating_count)
+          : undefined,
+        end_rating_count: query.end_rating_count
+          ? parseFloat(query.end_rating_count)
+          : undefined,
+      },
+      t,
+    );
   });
 };

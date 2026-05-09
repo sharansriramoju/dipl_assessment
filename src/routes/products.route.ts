@@ -2,6 +2,7 @@ import { Router } from "express";
 import multer from "multer";
 import {
   bulkUploadProductsController,
+  getAllProductsController,
   getLatestBulkUploadJobStatusController,
 } from "../controllers/products.controller";
 
@@ -17,4 +18,5 @@ export default (router: Router) => {
     "/bulk-upload/products/latest-job-queue",
     getLatestBulkUploadJobStatusController,
   );
+  router.get("/products", getAllProductsController);
 };
