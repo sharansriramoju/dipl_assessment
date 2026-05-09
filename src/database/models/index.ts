@@ -22,6 +22,29 @@ Category.belongsToMany(Product, {
   onDelete: "CASCADE",
 });
 
+// ProductCategory belongs to both Product and Category
+ProductCategory.belongsTo(Product, {
+  foreignKey: "product_id",
+  as: "product",
+  onDelete: "CASCADE",
+});
+ProductCategory.belongsTo(Category, {
+  foreignKey: "category_id",
+  as: "categories",
+  onDelete: "CASCADE",
+});
+
+Category.hasMany(ProductCategory, {
+  foreignKey: "category_id",
+  as: "productCategories",
+  onDelete: "CASCADE",
+});
+Product.hasMany(ProductCategory, {
+  foreignKey: "product_id",
+  as: "productCategories",
+  onDelete: "CASCADE",
+});
+
 // Product-Review One-to-Many Relationship
 Product.hasMany(Review, {
   foreignKey: "product_id",
