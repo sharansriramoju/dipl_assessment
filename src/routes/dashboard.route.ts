@@ -1,9 +1,16 @@
 import { Router } from "express";
-import { getNoOfProductsPerCategoryController } from "../controllers/dashboard.controller";
+import {
+  getAverageRatingPerCategoryController,
+  getNoOfProductsPerCategoryController,
+} from "../controllers/dashboard.controller";
 
 export default (router: Router) => {
   router.get(
-    "/dahsboard/products-per-category",
+    "/dashboard/products-per-category",
     getNoOfProductsPerCategoryController,
+  );
+  router.get(
+    "/dashboard/average-rating-per-category",
+    getAverageRatingPerCategoryController,
   );
 };
