@@ -3,6 +3,7 @@ import multer from "multer";
 import {
   bulkUploadProductsController,
   getAllProductsController,
+  getCategoriesController,
   getLatestBulkUploadJobStatusController,
 } from "../controllers/products.controller";
 
@@ -19,4 +20,5 @@ export default (router: Router) => {
     getLatestBulkUploadJobStatusController,
   );
   router.get("/products", getAllProductsController);
+  router.get("/categories", getCategoriesController);
 };

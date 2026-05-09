@@ -4,6 +4,7 @@ import { ApiError } from "../errors/ApiError";
 import {
   bulkUploadProductsService,
   getAllProductsService,
+  getcategoriesService,
   getLatestBulkUploadJobStatusService,
 } from "../services/products.service";
 
@@ -62,6 +63,18 @@ export const getAllProductsController = asyncHandler(
     return res.status(200).json({
       message: "Products fetched successfully",
       data: products,
+    });
+  },
+);
+
+export const getCategoriesController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const search = req.query.search as string;
+    const categories = await getcategoriesService(search);
+    return res.status(200).json({
+      message: "Categories fetched successfully",
+      data: categories,
+      success: true,
     });
   },
 );

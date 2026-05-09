@@ -173,6 +173,7 @@ export const getProductsRepository = async (
 
   return await Product.findAndCountAll({
     where: whereClause,
+    distinct: true,
     include: [
       {
         model: Review,
@@ -197,6 +198,22 @@ export const getProductsRepository = async (
     ],
     offset: query.offset,
     limit: query.limit,
+    transaction: t,
+  });
+};
+
+export const getCategoriesRepository = async (
+  search?: string,
+  t?: Transaction,
+) => {
+  return await Category.findAll({
+    where: search
+      ? {
+          name: {
+            [Op.iLike]: `%${search}%`,
+          },
+        }
+      : undefined,
     transaction: t,
   });
 };

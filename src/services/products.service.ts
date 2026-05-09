@@ -5,6 +5,7 @@ import {
   addCategoryRepository,
   addProductCategoryRepository,
   addProductRepository,
+  getCategoriesRepository,
   getLatestRunningJobQueueRepository,
   getProductsRepository,
 } from "../database/repositories/products.repository";
@@ -202,5 +203,11 @@ export const getAllProductsService = async (query: {
       },
       t,
     );
+  });
+};
+
+export const getcategoriesService = async (search: string) => {
+  return await sequelize.transaction(async (t) => {
+    return await getCategoriesRepository(search, t);
   });
 };

@@ -60,24 +60,20 @@ export const getLatestRunningJobQueueBySchoolAndType = async (
   }
 };
 
-export const getAllJobQueuesBySchoolId = async (
+export const getAllJobQueues = async (
   data: {
     limit: number;
     offset: number;
   },
+  status?: string,
   t?: Transaction,
 ) => {
-  try {
-    const jobQueues = await JobQueue.findAndCountAll({
-      where: { status: "completed" },
-      limit: data.limit,
-      offset: data.offset,
-      order: [["created_at", "DESC"]],
-      transaction: t,
-    });
-    return jobQueues;
-  } catch (error) {
-    console.error("Error in getAllJobQueuesBySchoolId:", error);
-    throw new Error("Error getting all job queues by school ID");
-  }
+  const jobQueues = await JobQueue.findAndCountAll({
+    where: status ? { status } : undefined,
+    limit: data.limit,
+    offset: data.offset,
+    order: [["created_at", "DESC"]],
+    transaction: t,
+  });
+  return jobQueues;
 };
