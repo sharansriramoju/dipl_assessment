@@ -15,6 +15,9 @@ const sequelize = new Sequelize(
         require: true, // <--- enables SSL
         rejectUnauthorized: false, // <--- for self-signed certificates
       },
+      connect: {
+        family: 4, // <--- force IPv4 connection
+      },
     },
     logging: false, // set to console.log to see SQL queries
     timezone: "+05:30", // set to your timezone

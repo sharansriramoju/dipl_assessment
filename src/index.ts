@@ -67,7 +67,11 @@ app.use(
 );
 
 // --- CORS (before routes) --- //
-const allowedOrigins = ["http://localhost:49631", "http://localhost:5173"];
+const allowedOrigins = [
+  "http://localhost:49631",
+  "http://localhost:5173",
+  "http://localhost:3001",
+];
 
 app.use(
   cors({
