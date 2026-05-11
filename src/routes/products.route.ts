@@ -6,6 +6,11 @@ import {
   getCategoriesController,
   getLatestBulkUploadJobStatusController,
 } from "../controllers/products.controller";
+import { validateQuery } from "../middlewares/index.middleware";
+import {
+  getAllCategoriesSchema,
+  getAllProductsSchema,
+} from "../validations/products.validation";
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -19,6 +24,14 @@ export default (router: Router) => {
     "/bulk-upload/products/latest-job-queue",
     getLatestBulkUploadJobStatusController,
   );
-  router.get("/products", getAllProductsController);
-  router.get("/categories", getCategoriesController);
+  router.get(
+    "/products",
+    validateQuery(getAllProductsSchema),
+    getAllProductsController,
+  );
+  router.get(
+    "/categories",
+    validateQuery(getAllCategoriesSchema),
+    getCategoriesController,
+  );
 };
