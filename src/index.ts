@@ -71,6 +71,7 @@ const allowedOrigins = [
   "http://localhost:49631",
   "http://localhost:5173",
   "http://localhost:3000",
+  "https://dipl-dashboard-production.up.railway.app",
 ];
 
 app.use(
