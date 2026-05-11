@@ -19,7 +19,7 @@ import "./jobs/importer";
 // import "./jobs/listings.cronjob";
 // import "./jobs/interactions.cronjob";
 
-const port = 3000;
+const port = 3001;
 const host = "0.0.0.0";
 const app = express();
 const server = http.createServer(app);
@@ -70,7 +70,7 @@ app.use(
 const allowedOrigins = [
   "http://localhost:49631",
   "http://localhost:5173",
-  "http://localhost:3001",
+  "http://localhost:3000",
 ];
 
 app.use(
